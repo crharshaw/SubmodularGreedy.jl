@@ -1,0 +1,10 @@
+name = "SubmodularGreedy"
+uuid = "d041f44f-51cd-426a-a365-be1e6f5d644d"
+authors = ["Chris Harshaw <crharshaw@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

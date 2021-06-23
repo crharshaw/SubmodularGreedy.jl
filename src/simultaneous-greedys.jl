@@ -195,7 +195,7 @@ function density_search(pq::PriorityQueue, num_sol::Integer, beta_scaling::Abstr
 
     # initialize best solutions
     best_sol = nothing
-    best_val = -Inf
+    best_f_val = -Inf
 
     iter = 1
     while upper_density_ratio > (1+delta) * lower_density_ratio
@@ -203,7 +203,7 @@ function density_search(pq::PriorityQueue, num_sol::Integer, beta_scaling::Abstr
         if verbose
             println("\nIteration $iter ")
             println("\tUpper density ratio is $upper_density_ratio and lower density ratio is $lower_density_ratio")
-            println("\tBest value seen is $best_val")
+            println("\tBest value seen is $best_f_val")
             println("\tSo far, we have $num_fun function evaluations and $num_oracle independence queries")
         end
 
@@ -222,8 +222,8 @@ function density_search(pq::PriorityQueue, num_sol::Integer, beta_scaling::Abstr
         end
 
         # update the best set 
-        if fval > best_val 
-            best_val = fval 
+        if fval > best_f_val 
+            best_f_val = fval 
             best_sol = sol
         end
 
@@ -241,7 +241,7 @@ function density_search(pq::PriorityQueue, num_sol::Integer, beta_scaling::Abstr
         iter += 1
     end # end binary search
     
-    return best_sol, best_val, num_fun, num_oracle
+    return best_sol, best_f_val, num_fun, num_oracle
 end
 
 """
@@ -406,12 +406,12 @@ function simultaneous_greedys(gnd::Array{<:Integer}, f_diff, ind_add_oracle; num
     # run the algorithms
     if run_density_search
         delta = epsilon
-        best_sol, best_val, num_f, num_or = density_search(pq, num_sol, beta_scaling, delta, f_diff, ind_add_oracle, knapsack_constraints, epsilon, opt_size_ub; verbose=alg_verbose)
+        best_sol, best_f_val, num_f, num_or = density_search(pq, num_sol, beta_scaling, delta, f_diff, ind_add_oracle, knapsack_constraints, epsilon, opt_size_ub; verbose=alg_verbose)
 
     else
         # run the plain simultaneous greedy with density ratio = 0
         density_ratio = 0.0
-        best_sol, best_val, num_f, num_or, _ = simultaneous_greedy_alg(pq, num_sol, epsilon, f_diff, ind_add_oracle, knapsack_constraints, density_ratio, opt_size_ub; verbose=alg_verbose)
+        best_sol, best_f_val, num_f, num_or, _ = simultaneous_greedy_alg(pq, num_sol, epsilon, f_diff, ind_add_oracle, knapsack_constraints, density_ratio, opt_size_ub; verbose=alg_verbose)
     end
 
     # update the number of oracle queries
@@ -426,9 +426,9 @@ function simultaneous_greedys(gnd::Array{<:Integer}, f_diff, ind_add_oracle; num
             print("\n\nObtained solution S = ")
             printlnset(best_sol)
         end
-        println("Obtained solution has value $best_val")
+        println("Obtained solution has value $best_f_val")
         println("Required $num_fun function evaluations and $num_oracle independence queries")
     end
 
-    return best_sol, best_val, num_fun, num_oracle
+    return best_sol, best_f_val, num_fun, num_oracle
 end

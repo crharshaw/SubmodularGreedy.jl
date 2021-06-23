@@ -182,7 +182,7 @@ function repeated_greedy_density_search(pq::PriorityQueue, num_sol::Integer, f_d
 
     # initialize solution + oracle info 
     best_sol = nothing
-    best_val = -Inf
+    best_f_val = -Inf
     num_fun = 0
     num_oracle = 0
 
@@ -196,7 +196,7 @@ function repeated_greedy_density_search(pq::PriorityQueue, num_sol::Integer, f_d
         if verbose
             println("\nIteration $iter ")
             println("\tUpper density ratio is $upper_density_ratio and lower density ratio is $lower_density_ratio")
-            println("\tBest value seen is $best_val")
+            println("\tBest value seen is $best_f_val")
             println("\tSo far, we have $num_fun function evaluations and $num_oracle independence queries")
         end
 
@@ -225,7 +225,7 @@ function repeated_greedy_density_search(pq::PriorityQueue, num_sol::Integer, f_d
 
     end # end grid search
 
-    return best_sol, best_val, num_fun, num_oracle
+    return best_sol, best_f_val, num_fun, num_oracle
 end
 
 """
@@ -361,12 +361,12 @@ function repeated_greedy(gnd::Array{<:Integer}, f_diff, ind_add_oracle; num_sol:
     # run the algorithms
     if run_density_search
         delta = epsilon
-        best_sol, best_val, num_f, num_or = repeated_greedy_density_search(pq, num_sol, f_diff, ind_add_oracle, knapsack_constraints, beta_scaling, delta, 0.0, opt_size_ub; verbose=alg_verbose)
+        best_sol, best_f_val, num_f, num_or = repeated_greedy_density_search(pq, num_sol, f_diff, ind_add_oracle, knapsack_constraints, beta_scaling, delta, 0.0, opt_size_ub; verbose=alg_verbose)
 
     else
         # run the plain repeated greedy with density ratio = 0
         density_ratio = 0.0
-        best_sol, best_val, num_f, num_or = repeated_greedy_alg(pq, num_sol, f_diff, ind_add_oracle, knapsack_constraints, density_ratio, epsilon, opt_size_ub; verbose=alg_verbose)
+        best_sol, best_f_val, num_f, num_or = repeated_greedy_alg(pq, num_sol, f_diff, ind_add_oracle, knapsack_constraints, density_ratio, epsilon, opt_size_ub; verbose=alg_verbose)
     end
 
     # update the number of oracle queries
@@ -379,9 +379,9 @@ function repeated_greedy(gnd::Array{<:Integer}, f_diff, ind_add_oracle; num_sol:
             print("\n\nObtained solution S = ")
             printlnset(best_sol)
         end
-        println("Obtained solution has value $best_val")
+        println("Obtained solution has value $best_f_val")
         println("Required $num_fun function evaluations and $num_oracle independence queries")
     end
 
-    return best_sol, best_val, num_fun, num_oracle
+    return best_sol, best_f_val, num_fun, num_oracle
 end

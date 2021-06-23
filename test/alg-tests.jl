@@ -165,7 +165,7 @@ end
 if verbose
     print_header("TEST 8: REPEATED GREEDY")
 end
-best_sol, best_val, num_fun, num_oracle = repeated_greedy(gnd, f_diff, ind_add_oracle, num_sol=4)
+best_sol, best_f_val, num_fun, num_oracle = repeated_greedy(gnd, f_diff, ind_add_oracle, num_sol=4)
 if verbose
     println("Testing that the returned solution is { 1, 2, 3}")
 end

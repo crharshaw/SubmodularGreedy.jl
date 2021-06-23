@@ -21,7 +21,7 @@ This implementation offers approximate greedy search and lazy evaluations.
 - `ind_add_oracle`: an independence oracle
 - `knapsack_constraints`: a 2D array of knapsack constraints or nothing
 - `density_ratio`: the maximum density ratio threshold
-- `opt_ub_size`: an upper bound on the size of the optimal set
+- `opt_size_ub`: an upper bound on the size of the optimal set
 
 # Output 
 - `best_sol`: the best solution 
@@ -172,7 +172,7 @@ A binary search routine for finding a good density ratio.
 - `ind_add_oracle`: an independence oracle
 - `knapsack_constraints`: a 2D array of knapsack constraints or nothing
 - `epsilon`: a number in [0,1] which controls the approximation / speed trade off. Set to `0.0` for exact algorithm.
-- `opt_ub_size`: an upper bound on the size of the optimal set
+- `opt_size_ub`: an upper bound on the size of the optimal set
 
 # Output 
 - `best_sol`: the best solution 
@@ -338,7 +338,7 @@ In both of these cases, setting `extendible` and `monotone` further improves the
 - `extendible`: set true if the indepence system is `k`-extendible
 - `monotone`: set true if the objective is monotone
 - `epsilon`: a number in [0,1] which controls the approximation / speed trade off. Set to `0.0` for exact algorithm.
-- `opt_ub_size`: an upper bound on the size of the optimal set
+- `opt_size_ub`: an upper bound on the size of the optimal set
 - `verbose_lvl`: set `0` to silence output, `1` to have mild output of parameters and `2` for full algorithm output.
 
 # Output 

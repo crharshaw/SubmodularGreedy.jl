@@ -76,7 +76,7 @@ This implementation offers approximate greedy search and lazy evaluations.
 - `knapsack_constraints`: a 2D array of knapsack constraints or nothing
 - `density_ratio`: the maximum density ratio threshold
 - `epsilon`: a number in [0,1] which controls the approximation / speed trade off. Set to `0.0` for exact algorithm.
-- `opt_ub_size`: an upper bound on the size of the optimal set
+- `opt_size_ub`: an upper bound on the size of the optimal set
 
 # Output 
 - `best_sol`: the best solution 
@@ -167,7 +167,7 @@ A grid search routine for finding a good density ratio.
 - `beta_scaling`: scaling term for the density ratio
 - `delta`: a number in [0,1] which controls the approximation / speed trade off in the multiplicative search for best density ratio
 - `epsilon`: a number in [0,1] which controls the approximation / speed trade off in greedy search
-- `opt_ub_size`: an upper bound on the size of the optimal set
+- `opt_size_ub`: an upper bound on the size of the optimal set
 
 # Output 
 - `best_sol`: the best solution 
@@ -175,7 +175,7 @@ A grid search routine for finding a good density ratio.
 - `num_fun`: the number of function evaluations
 - `num_oracle`: the number of independence oracle evaluations
 """
-function repeated_greedy_density_search(pq::PriorityQueue, num_sol::Integer, f_diff, ind_add_oracle, knapsack_constraints::Union{Array{<:AbstractFloat,2}, Nothing}, beta_scaling::AbstractFloat, delta::AbstractFloat, epsilon::AbstractFloat, opt_ub_size::Integer; verbose=false)
+function repeated_greedy_density_search(pq::PriorityQueue, num_sol::Integer, f_diff, ind_add_oracle, knapsack_constraints::Union{Array{<:AbstractFloat,2}, Nothing}, beta_scaling::AbstractFloat, delta::AbstractFloat, epsilon::AbstractFloat, opt_size_ub::Integer; verbose=false)
 
     # get the max gain 
     _, max_gain = peek(pq)
@@ -204,7 +204,7 @@ function repeated_greedy_density_search(pq::PriorityQueue, num_sol::Integer, f_d
         density_ratio = sqrt( lower_density_ratio * upper_density_ratio )
 
         # compute the new density ratio, run repeated greedy
-        sol, f_val, num_f, num_or, knap_reject = repeated_greedy_alg(deepcopy(pq), num_sol, f_diff, ind_add_oracle, knapsack_constraints, density_ratio, epsilon, opt_ub_size)
+        sol, f_val, num_f, num_or, knap_reject = repeated_greedy_alg(deepcopy(pq), num_sol, f_diff, ind_add_oracle, knapsack_constraints, density_ratio, epsilon, opt_size_ub)
 
         # update solution + oracle info
         if f_val > best_f_val 
@@ -301,7 +301,7 @@ In both of these cases, setting `monotone` further improves the automatic settin
 - `k`: parameter of the indepence set, i.e. `k`-system
 - `knapsack_constraints`: a 2D array of knapsack constraints (default: nothing)
 - `epsilon`: a number in [0,1] which controls the approximation / speed trade off
-- `opt_ub_size`: an upper bound on the size of the optimal set
+- `opt_size_ub`: an upper bound on the size of the optimal set
 - `verbose_lvl`: set `0` to silence output, `1` to have mild output of parameters amnd `2` for full algorithm output.
 
 # Output 
@@ -310,7 +310,7 @@ In both of these cases, setting `monotone` further improves the automatic settin
 - `num_fun`: the number of function evaluations
 - `num_oracle`: the number of independence oracle evaluations
 """
-function repeated_greedy(gnd::Array{<:Integer}, f_diff, ind_add_oracle; num_sol::Integer=0, k::Integer=0, knapsack_constraints::Union{Array{<:AbstractFloat,2}, Nothing}=nothing, monotone::Bool=false, epsilon::Float64=0.0, opt_ub_size::Integer=maximum(gnd), verbose_lvl::Integer=1)
+function repeated_greedy(gnd::Array{<:Integer}, f_diff, ind_add_oracle; num_sol::Integer=0, k::Integer=0, knapsack_constraints::Union{Array{<:AbstractFloat,2}, Nothing}=nothing, monotone::Bool=false, epsilon::Float64=0.0, opt_size_ub::Integer=maximum(gnd), verbose_lvl::Integer=1)
 
 
     # check that inputs make sense
@@ -361,12 +361,12 @@ function repeated_greedy(gnd::Array{<:Integer}, f_diff, ind_add_oracle; num_sol:
     # run the algorithms
     if run_density_search
         delta = epsilon
-        best_sol, best_val, num_f, num_or = repeated_greedy_density_search(pq, num_sol, f_diff, ind_add_oracle, knapsack_constraints, beta_scaling, delta, 0.0, opt_ub_size; verbose=alg_verbose)
+        best_sol, best_val, num_f, num_or = repeated_greedy_density_search(pq, num_sol, f_diff, ind_add_oracle, knapsack_constraints, beta_scaling, delta, 0.0, opt_size_ub; verbose=alg_verbose)
 
     else
         # run the plain repeated greedy with density ratio = 0
         density_ratio = 0.0
-        best_sol, best_val, num_f, num_or = repeated_greedy_alg(pq, num_sol, f_diff, ind_add_oracle, knapsack_constraints, density_ratio, epsilon, opt_ub_size; verbose=alg_verbose)
+        best_sol, best_val, num_f, num_or = repeated_greedy_alg(pq, num_sol, f_diff, ind_add_oracle, knapsack_constraints, density_ratio, epsilon, opt_size_ub; verbose=alg_verbose)
     end
 
     # update the number of oracle queries

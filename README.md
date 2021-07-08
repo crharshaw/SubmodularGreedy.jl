@@ -33,7 +33,7 @@ Now SubmodularGreedy is installed with your version of Julia and you can use it.
 The main functionality of this package is to run various greedy-based optimization methods given user-defined value and independence oracles. 
 
 
-Here is an example of how to use the function `sample_gs_walk`.
+Here is an example of how to use the greedy algorithm, given by the function `greedy`.
 
 ```julia
 # import the package

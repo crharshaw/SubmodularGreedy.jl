@@ -1,6 +1,6 @@
 # SubmodularGreedy.jl
 
-`SubmodularGreedy.jl` is a Julia package for constrained submodular maximization using greedy-based algorithm.
+`SubmodularGreedy.jl` is a Julia package for constrained submodular maximization using greedy-based algorithms.
 In particular, the following algorithms (including linear time and knapsack variants) are included:
 
 1. Greedy: `greedy`
